@@ -12,7 +12,7 @@ faultdef INVALID_LIB_DIR;
 struct Cli @Command("c3po") {
   Maybe{CmdAdd} add @Seali(@arg(subcommand));
 
-  Maybe{CmdRemove} remove @Seali(@arg(subcommand));
+  // Maybe{CmdRemove} remove @Seali(@arg(subcommand));
 
   Maybe{CmdUpdate} update @Seali(@arg(subcommand));
 }
@@ -177,9 +177,9 @@ fn int main(String[] args) {
     handle_add(cli.add.value)!!;
   }
 
-  if (try cli.remove.get()) {
-    handle_remove(cli.remove.value)!!;
-  }
+  // if (try cli.remove.get()) {
+  //   handle_remove(cli.remove.value)!!;
+  // }
 
   if (try cli.update.get()) {
     Path? lib_dir = path::new(mem, "./lib");
