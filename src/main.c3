@@ -89,9 +89,9 @@ fn void? handle_add(CmdAdd add, Object* deps = null) {
     return;
   }
 
-  Process? p = process::spawn({
-    "git", 
-    "clone", 
+  process::SubProcess? p = process::create({
+    "git",
+    "clone",
     string::format(mem, "https://github.com/%s", add.repo),
     string::format(mem, "lib/%s.c3l", lib_name),
   });
@@ -121,9 +121,11 @@ fn void? handle_remove(CmdRemove remove) {
 }
 
 fn void? handle_update_of(Path lib_path) {
-  Process? p = process::spawn({
-    "git", 
-    "pull", 
+  process::SubProcess? p = process::create({
+    "git",
+    "-C",
+    lib_path.str_view(),
+    "pull",
   });
 
   if (catch p) {
@@ -138,7 +140,7 @@ fn void? handle_update_of(Path lib_path) {
     return;
   }
 
-  Path? lib_dir = lib_path.append(mem, "/lib");
+  Path? lib_dir = lib_path.append(mem, "lib");
   if (catch lib_dir) return;
 
   return handle_update({}, lib_dir);
