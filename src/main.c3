@@ -3,7 +3,6 @@ import std::io;
 import std::collections::maybe;
 import std::collections::object;
 import std::os::process;
-
 import std::io::path;
 
 import seali;
@@ -90,12 +89,17 @@ fn void? handle_add(CmdAdd add, Object* deps = null) {
     return;
   }
 
-  process::SubProcess p = process::create({
+  process::SubProcess? p = process::create({
     "git",
     "clone",
     string::format(mem, "https://github.com/%s", add.repo),
     string::format(mem, "lib/%s.c3l", lib_name),
-  })!;
+  });
+
+  if (catch p) {
+    io::eprintn("Error executing the command. Make sure git is installed and the lib dir exists.");
+    return;
+  }
 
   int code = p.join()!;
 
@@ -117,12 +121,17 @@ fn void? handle_remove(CmdRemove remove) {
 }
 
 fn void? handle_update_of(Path lib_path) {
-  process::SubProcess p = process::create({
+  process::SubProcess? p = process::create({
     "git",
     "-C",
     lib_path.str_view(),
     "pull",
-  })!;
+  });
+
+  if (catch p) {
+    io::eprintn("Error executing the command.");
+    return;
+  }
 
   int code = p.join()!;
 
